@@ -108,11 +108,11 @@ def plot_loss_accuracy(lossaccbf,sfname=''):
     st=0#int(len(lossaccbf)/50)
     sp=1
     end=30000
-    ax1.plot(xs[st:end:sp],lossaccbf[st:end:sp,0],'k-',marker='d',markersize=1,markerfacecolor='none',linewidth=0.2,label=' \n\n\nLoss\n\n\n')
+    ax1.plot(xs[st:end:sp],lossaccbf[st:end:sp,0],'k-',marker='d',markersize=1,markerfacecolor='none',linewidth=0.2,label=' \n\n\nTrain loss     \n\n\n')
     ax1.set_xlabel('epochs',mc.font1)
     ax1.set_ylabel('Training loss',mc.font1)  # 可以使用中文，但需要导入一些库即字体
     #plt.title('ROC Curve for class '+ str(class_id))
-    ax1.legend(loc='upper left',edgecolor='w')
+    ax1.legend(loc='upper right',edgecolor='w')
     
     ax2 = ax1.twinx() 
     ax2.spines['top'].set_linewidth(0);##设置底部坐标轴的粗细
@@ -128,7 +128,7 @@ def plot_loss_accuracy(lossaccbf,sfname=''):
     #plt.xlabel('epochs',mc.font1)
     ax2.set_ylabel('Accuracy',mc.font1) # 可以使用中文，但需要导入一些库即字体
     #plt.title('ROC Curve for class '+ str(c
-    ax2.legend(loc='upper left' ,edgecolor='w')#,bbox_to_anchor=(1.02,0.54)
+    ax2.legend(loc='upper right' ,edgecolor='w')#,bbox_to_anchor=(1.02,0.54)
     
     
     # print('loss:',lossaccbf[-1,0],
@@ -144,8 +144,8 @@ def plot_loss(lossaccbf,sfname=''):
     ax1.spines['left'].set_linewidth(1);##设置左边坐标轴的粗细
     ax1.spines['right'].set_linewidth(0);##设置左边坐标轴的粗细
     xs=np.arange(0,len(lossaccbf))
-    plt.ylim(0,1)
-    plt.yticks([0,0.2,0.4,0.6,0.8,1.0],fontsize=10)#,fontweight='bold'
+    plt.ylim(0,0.5)
+    plt.yticks([0,0.1,0.2,0.3,0.4,0.5],fontsize=10)#,fontweight='bold'
     plt.xticks(fontsize=10)
     st=0#int(len(lossaccbf)/50)
     sp=1

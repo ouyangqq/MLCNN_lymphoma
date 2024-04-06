@@ -23,7 +23,7 @@ def gen_circle_points(center_x,center_y,r1,r2,num_points):
     
     return coordinates
 
-def make_mask(image_dir, save_dir,bufs,showfig=False):
+def make_labels(image_dir, save_dir,bufs,showfig=False):
     global res
     global st
     global end
@@ -44,14 +44,10 @@ def make_mask(image_dir, save_dir,bufs,showfig=False):
         json_data = json.load(open(os.path.join(image_dir, js), 'rb'))
         shapes_ = json_data['shapes']  # 得到标签
         
-        
         orgin=Image.open(os.path.join(image_dir, js.replace('json', 'jpg'))).convert("L")  #转化为2D图片的结果 
         
         orgin_img=np.array(orgin) #AAAAA
-        
-
-
-         
+    
         label = shapes_[-1]['label'] #获得当前mask的标签
         if(label=='jt'):
             points = shapes_[-1]['points'] #获得当前mask标记点坐标
@@ -139,15 +135,11 @@ def make_mask(image_dir, save_dir,bufs,showfig=False):
                 bpbuf.append(np.average(biopsy_points,0))
                 # print("******",bpbuf[-1])
                 
-                
                 points=biopsy_points-st
                 points = tuple(tuple(i) for i in points) #对mask标记点坐标进行整合形成一个区域
                 
-                
-                
                 B_pos=np.average(points,0)
 
-                
                 
                 r1,r2=3*cut_img.shape[1]/iml,3*cut_img.shape[0]/iml
                 c_points=gen_circle_points(B_pos[0],B_pos[1],r1,r2,15)
@@ -165,14 +157,11 @@ def make_mask(image_dir, save_dir,bufs,showfig=False):
                 
                 # loc=np.int(B_pos)
                 # mask_img[loc[0],loc[1]]=1
-                
                 B_mask=B_mask+mask_img #DDDDDD
-                
                 
                 
                 B_pos[0]=B_pos[0]/mask_img.shape[1]#*80
                 B_pos[1]=B_pos[1]/mask_img.shape[0]#*80
-                
                 
                 
                 B_poss[count,0],B_poss[count,1]=B_pos[0],B_pos[1]
@@ -298,17 +287,17 @@ def gen_gaussian_noise(signal,SNR):
 
 
 
-'''
+
 bufs=[]
 
 path1 = r"0\0_labelmeSegmentaion/"
 path2 = r"1\1_labelmeSegmentaion/"
-
+'''
 for path in [path1,path2]:
     fpaths=os.listdir(path)
     for i,pn in enumerate(fpaths[23:28]):#[23:28]
         print(i,pn)
-        make_mask(path+pn, path+pn,bufs,showfig=[False,'all']) # 第一个Path+pn代表读取原始图片的路径，第二个代表保存mask和合并图的路径
+        make_labels(path+pn, path+pn,bufs,showfig=[False,'all']) # 第一个Path+pn代表读取原始图片的路径，第二个代表保存mask和合并图的路径
     
 path1 = r"0\0_InternalValidation_readbyUlTRASOUNDGRAPHERorAI/"
 path2 = r"1\1_InternalValidation_readbyUlTRASOUNDGRAPHERorAI/"
@@ -316,7 +305,7 @@ for path in [path1,path2]:
     fpaths=os.listdir(path)
     for i,pn in enumerate(fpaths[23:28]):
         print(i,pn)
-        make_mask(path+pn, path+pn,bufs,showfig=[False,'all']) # 第一个Path+pn代表读取原始图片的路径，第二个代表保存mask和合并图的路径
+        make_labels(path+pn, path+pn,bufs,showfig=[False,'all']) # 第一个Path+pn代表读取原始图片的路径，第二个代表保存mask和合并图的路径
 
 np.save("Lym_dataset_no_enhance.npy",bufs)
 
@@ -328,7 +317,7 @@ for path in [path1,path2]:
     fpaths=os.listdir(path)
     for i,pn in enumerate(fpaths):
         print(i,pn)
-        make_mask(path+pn, path+pn,bufs1,showfig=[False,'all']) # 第一个Path+pn代表读取原始图片的路径，第二个代表保存mask和合并图的路径
+        make_labels(path+pn, path+pn,bufs1,showfig=[False,'all']) # 第一个Path+pn代表读取原始图片的路径，第二个代表保存mask和合并图的路径
 
 
 np.save("Lym_dataset_international_test.npy",bufs1)
@@ -348,25 +337,21 @@ def generate_rands_data(bufs=np.load("Lym_dataset_no_enhance.npy"),fn='',enhance
                 em[4]=np.flip(bufs[j][4],axis=1)
                 for m,dt in enumerate(tmp[0::2]): 
                     if(dt>0.01):tmp[2*m]=1-dt
-    
+                    
+            '---------对biopsy位置按照x坐标从小到大排序--------'
             tmp2=tmp.reshape(7,2)
             tmp1=np.sort(tmp2[tmp2[:,0]>0.01,0]) 
             tmp3=np.zeros([7,2])
-            for m,dt in enumerate(tmp1):
-                tmp3[m,:]=tmp2[tmp2[:,0]==dt,:]
+            for m,dt in enumerate(tmp1):tmp3[m,:]=tmp2[tmp2[:,0]==dt,:]
             tmp=tmp3.reshape(14)
-            
             tmpp=np.zeros(14)
-            
             mm=tmp[0::2][tmp[0::2]>0]
             mm1=tmp[1::2][tmp[1::2]>0]
             
             tmpp[0:len(mm)]=mm
             tmpp[len(mm):len(mm)+len(mm1)]=mm1
-            
-            
-            
-            em[5]=tmpp#np.insert(tmp,0,int(len(tmp[tmp>0])/2))
+            em[5]=tmpp
+            '-------------------------------------------'
             bufss1.append(em)
        
     
