@@ -49,8 +49,8 @@ Y_vadit=torch.from_numpy(np.array(Yd)[sel2,:].astype(np.float32)).to(device)
 MASKS_train=torch.from_numpy(np.array(MASK)[sel1,:,:,:].astype(np.float32)).to(device) 
 MASKS_vadit=torch.from_numpy(np.array(MASK)[sel2,:,:,:].astype(np.float32)).to(device)
 
-MASKS_train[:,1,:,:]=MASKS_train[:,1,:,:]*3
-MASKS_vadit[:,1,:,:]=MASKS_vadit[:,1,:,:]*3
+# MASKS_train[:,1,:,:]=MASKS_train[:,1,:,:]*2
+# MASKS_vadit[:,1,:,:]=MASKS_vadit[:,1,:,:]*2
 
 pos_train=torch.from_numpy(np.array(POS)[sel1,:].astype(np.float32)).to(device) 
 pos_vadit=torch.from_numpy(np.array(POS)[sel2,:].astype(np.float32)).to(device)
@@ -347,9 +347,9 @@ def Train_model(flag='Training_classifier'):
     np.save('model_weights/'+flag+'_loss_cnn_nn_%d' % epochs+'_'+str(alaph)+'.npy',np.array(loss_accbuf)) 
 
 
-Train_model(flag='Training_classifier')
-Train_model(flag='Training_segmentation')
-Train_model(flag='Training_pos_loc')
+# Train_model(flag='Training_classifier')
+# Train_model(flag='Training_segmentation')
+# Train_model(flag='Training_pos_loc')
 
 # %% 
 net.load_state_dict(torch.load('model_weights/model_cnn_nn.pth')) 
@@ -394,7 +394,7 @@ def dis_seg_imgs(MASKS,Pred_masks,label_pos,pred_pos,flag='',sel=6):
     # plt.imshow(Pred_masks[sel,0,:,:],cmap='gray')
     img=Pred_masks[sel,0,:,:]
     img=(img-img.min())/(img.max()-img.min())
-    plt.imshow(img,vmin=0.2,cmap='gray')
+    plt.imshow(img,vmin=0.2,vmax=0.5,cmap='gray')
     plt.xticks(ticks,fontsize=8)
     plt.yticks(ticks,fontsize=8)
     
@@ -461,13 +461,13 @@ def get_results(flag='training_'):
 
     print(prob_true,prob_pred)
     
-    sels=random.sample(range(0,len(YY)),10)  
+    sels=random.sample(range(0,len(YY)),200)  
     
-    for em in sels:
+    for em in [2]:
         sel=em
         print(sel,files[sel][-1])
         name=files[sel][-1].split('/')[-1]
         dis_seg_imgs(label_MASKS,Pred_masks,label_pos,pred_pos,flag=flag+name,sel=sel)
 
-get_results(flag='vaditing_')
+get_results(flag='training_')
 #%%
