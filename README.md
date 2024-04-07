@@ -6,4 +6,4 @@ To run the model, please
 
 (2) download the dataset file： “Lym_dataset.npy” from the link:https://pan.baidu.com/s/1rwgEV1yg_J7jEuOvL9KYoQ?pwd=1234, and put it in "dataset" folder.
 
-(3) running code of MLCNN_model.py 
+(3) run code of MLCNN_model.py in Python.
