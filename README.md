@@ -1,4 +1,4 @@
-This is source code for paper: A Multi-labeled Conventional Neural Network Model for Diagnosis of Lymphoma from Ultrasonic Images
+This is the source code for paper: A Multi-labeled Conventional Neural Network Model for Diagnosis of Lymphoma from Ultrasonic Images
 
 To run the model, please
 
